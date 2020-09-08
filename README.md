@@ -23,4 +23,71 @@ It provides a few useful bits for consumption in your code.
  - `ProcessIDCMPMessage()` is a function that is called when a new `IntuiMessage` is received. It returns an instance of `MessageLoopState`
    to let, usually `HandleIDCMP()` know whether or not it should continue listening for messages.
  
+ ## Examples
  
+ Below is an example bit of code that opens a window, attaches a custom handler for mouseMove, employs the default closeWindow handler
+ and that is basically it.
+ 
+ ```c
+#include <intuition/intuition.h>
+
+#include <exec/exec.h>
+#include <exec/libraries.h>
+#include <exec/types.h>
+
+#include <proto/intuition.h>
+#include <proto/exec.h>
+
+#include <stdio.h>
+#include <string.h>
+
+#include "idcmp.h"
+
+MessageLoopState 
+printMouseCoords(struct Window *window, struct IntuiMessage *message, WORD x, WORD y) {
+   printf("x %ld  y %ld\n", x, y);
+   return LOOPSTATE_NO_CHANGE;
+}
+
+int
+main(int argc, char **argv) {
+   struct Window *window;
+   struct IntuitionBase *IntuitionBase;
+   IDCMPEvents events;
+
+   InitializeIDCMPEvents(&events);
+   ApplyIDCMPBasics(&events);
+   events.mouseMove = printMouseCoords;
+   
+   IntuitionBase = (struct IntuitionBase *)OpenLibrary((STRPTR)"intuition.library", 37L);
+   if (!IntuitionBase) {
+      KPrintF("Failed to open library\n");
+      return 5;
+   }
+
+   window = OpenWindowTags(
+      NULL, 
+      WA_Width, 300, 
+      WA_Height, 180, 
+      WA_Left, 10, 
+      WA_Top, 20, 
+      WA_Title, "Hello Amiga", 
+      WA_Flags, 
+         WFLG_CLOSEGADGET | WFLG_DEPTHGADGET | WFLG_DRAGBAR | 
+         WFLG_REPORTMOUSE | WFLG_GIMMEZEROZERO | WFLG_HASZOOM,
+      WA_IDCMP, ALL_IDCMP_EVENTS,
+      TAG_END
+   );
+
+   if (!window) {
+      CloseLibrary((struct Library *)IntuitionBase);
+      return 5;
+   }
+
+   HandleIDCMP(&events, window, LOOPSTATE_CONTINUE);
+   CloseWindow(window);
+   CloseLibrary((struct Library *)IntuitionBase);
+
+   return 0;
+}
+```
