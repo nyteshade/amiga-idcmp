@@ -146,3 +146,7 @@ want to use this code, you can invoke `ProcessIDCMPMessage()` manually. See the 
 ```c
 HandleIDCMP(&events, window, LOOPSTATE_CONTINUE);
 ```
+
+### Screenshot
+
+<figure><img src="https://github.com/nyteshade/amiga-idcmp/blob/master/Example.png?raw=true"><figcaption>Example</figcaption></figure>
