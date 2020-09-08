@@ -2,12 +2,7 @@
 #include <proto/intuition.h>
 #include <string.h>
 
-#include "support/gcc8_c_support.h"
 #include "idcmp.h"
-
-#define CLEARBIT(number, bit)    (number &= ~(1 << bit))
-#define TOGGLEBIT(number, bit)   (number ^= 1 << bit)
-#define SETBIT(number, bit)      (number |= 1 << bit)
 
 /**
  * Predefined basic function that ensures the application message loop exits
@@ -344,7 +339,6 @@ ProcessIDCMPMessage(
             break;
                   
          default:
-            KPrintF("Unknown IDCMP message (%ld)\n", class);
             break;
       }
    }
