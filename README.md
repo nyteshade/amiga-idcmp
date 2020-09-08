@@ -91,3 +91,50 @@ main(int argc, char **argv) {
    return 0;
 }
 ```
+
+## Breakdown
+
+Let's look at the most important snippets in that example. 
+
+```c
+   IDCMPEvents events;
+```
+
+In this bit, we create a new `IDCMPEvents` struct on the stack. This struct is a container for all the event handlers that might be 
+invoked by the `HandleIDCMP()` function. It is highly recommended that `InitializeIDCMPEvents()` is called on each new instance before
+it is used. The handlers are checked for non-null status before being invoked and if the memory is not zeroed, function pointers may 
+be invoked when in fact they just point at random locations in memory. This will usually cause a crash.
+
+In order to use this, as mentioned above, two things need to happen. One we need to initalize it, and two we need to assign the function
+pointers within to point at functions that respond to the event. In the above example, we also invoke a method called `ApplyIDCMPBasics()` 
+which only creates a basic `closeWindow()` handler at the moment. 
+
+```c
+   InitializeIDCMPEvents(&events);
+   ApplyIDCMPBasics(&events);
+```
+
+Next we actually want to do something custom with out mouse move messages. Custom in this case is simply printing out the location, 
+but in order to do this we need to do two things. One we need to write a function to print out the coordinates and two we need to 
+assign the `mouseMove()` handler to the function we've defined.
+
+Here is our mouse move handler. 
+
+```c
+MessageLoopState 
+printMouseCoords(Window *window, IntuiMessage *message, WORD x, WORD y) {
+   printf("x %ld  y %ld\n", x, y);
+   return LOOPSTATE_NO_CHANGE;
+}
+```
+
+Note that it returns a `MessageLoopState` enum value. Typically, this means that if you return `TRUE` or `LOOPSTATE_FINISHED`, that
+`HandleIDCMP()` will return and move on. `LOOPSTATE_CONTINUE` will overwrite any other message in which `LOOPSTATE_FINISHED` might have
+been returned previously and `LOOPSTATE_NO_CHANGE` is coded such that whatever `HandleIDCMP()`'s previous state was, that it will not
+be changed.
+
+Assigning the handler is easy and is done as a single assignment statement.
+
+```c
+events.mouseMove = printMouseCoords;
+```
