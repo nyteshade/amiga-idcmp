@@ -138,3 +138,11 @@ Assigning the handler is easy and is done as a single assignment statement.
 ```c
 events.mouseMove = printMouseCoords;
 ```
+
+Finally, once your window is opened and your `IDCMPEvents` structure is pointing to the handlers you want to provide code for, simply
+invoke `HandleIDCMP()` to start the message loop processing. If you want to write your own `UserPort->mp_SigBit` handling but still 
+want to use this code, you can invoke `ProcessIDCMPMessage()` manually. See the `HandleIDCMP` function in idcmp.c. 
+
+```c
+HandleIDCMP(&events, window, LOOPSTATE_CONTINUE);
+```
