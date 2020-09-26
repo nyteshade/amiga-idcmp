@@ -10,17 +10,17 @@ It provides a few useful bits for consumption in your code.
 
  - `ALL_IDCMP_EVENTS` is a `#define` that includes all IDCMP_ flags at one time. 
  - `IDCMPMouseButton` is a enum type that names button defines in a more readable way, `RIGHT_MOUSE_UP` vs. `MENUUP` for example
- - `MessageLoopState` is a tri state enum that defines a finished, continue and no-change set of states for the continued parsing
+ - ` IDCMPState` is a tri state enum that defines a finished, continue and no-change set of states for the continued parsing
    of IDCMP messages for a given Window
  - `IDCMPEvents` is the big one; it is a struct that contains function pointers to handlers for each event type. More on this
    shortly.
  - `InitializeIDCMPEvents()` is a function that, given a pointer to an `IDCMPEvents` struct, will set its data to zeroes and make
    it ready for consumption by `ProcessIDCMPMessage()`
  - `ApplyIDCMPBasics()` for now, is a function that, given a pointer to an `IDCMPEvents` struct, will set its `closeWindow` handler
-   to return LOOPSTATE_FINISHED and cause `HandleIDCMP()` to return.
+   to return  STATE_FINISHED and cause `HandleIDCMP()` to return.
  - `HandleIDCMP()` is a function that can be called to start parsing messages for a window using handlers supplied by an instance
    of `IDCMPEvents`. 
- - `ProcessIDCMPMessage()` is a function that is called when a new `IntuiMessage` is received. It returns an instance of `MessageLoopState`
+ - `ProcessIDCMPMessage()` is a function that is called when a new `IntuiMessage` is received. It returns an instance of ` IDCMPState`
    to let, usually `HandleIDCMP()` know whether or not it should continue listening for messages.
  
  ## Examples
@@ -43,10 +43,10 @@ It provides a few useful bits for consumption in your code.
 
 #include "idcmp.h"
 
-MessageLoopState 
+ IDCMPState 
 printMouseCoords(struct Window *window, struct IntuiMessage *message, WORD x, WORD y) {
    printf("x %ld  y %ld\n", x, y);
-   return LOOPSTATE_NO_CHANGE;
+   return  STATE_NO_CHANGE;
 }
 
 int
@@ -84,7 +84,7 @@ main(int argc, char **argv) {
       return 5;
    }
 
-   HandleIDCMP(&events, window, LOOPSTATE_CONTINUE);
+   HandleIDCMP(&events, window,  STATE_CONTINUE);
    CloseWindow(window);
    CloseLibrary((struct Library *)IntuitionBase);
 
@@ -121,16 +121,16 @@ assign the `mouseMove()` handler to the function we've defined.
 Here is our mouse move handler. 
 
 ```c
-MessageLoopState 
+ IDCMPState 
 printMouseCoords(Window *window, IntuiMessage *message, WORD x, WORD y) {
    printf("x %ld  y %ld\n", x, y);
-   return LOOPSTATE_NO_CHANGE;
+   return  STATE_NO_CHANGE;
 }
 ```
 
-Note that it returns a `MessageLoopState` enum value. Typically, this means that if you return `TRUE` or `LOOPSTATE_FINISHED`, that
-`HandleIDCMP()` will return and move on. `LOOPSTATE_CONTINUE` will overwrite any other message in which `LOOPSTATE_FINISHED` might have
-been returned previously and `LOOPSTATE_NO_CHANGE` is coded such that whatever `HandleIDCMP()`'s previous state was, that it will not
+Note that it returns a ` IDCMPState` enum value. Typically, this means that if you return `TRUE` or ` STATE_FINISHED`, that
+`HandleIDCMP()` will return and move on. ` STATE_CONTINUE` will overwrite any other message in which ` STATE_FINISHED` might have
+been returned previously and ` STATE_NO_CHANGE` is coded such that whatever `HandleIDCMP()`'s previous state was, that it will not
 be changed.
 
 Assigning the handler is easy and is done as a single assignment statement.
@@ -144,7 +144,7 @@ invoke `HandleIDCMP()` to start the message loop processing. If you want to writ
 want to use this code, you can invoke `ProcessIDCMPMessage()` manually. See the `HandleIDCMP` function in idcmp.c. 
 
 ```c
-HandleIDCMP(&events, window, LOOPSTATE_CONTINUE);
+HandleIDCMP(&events, window,  STATE_CONTINUE);
 ```
 
 ### Screenshot
