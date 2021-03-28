@@ -2,9 +2,9 @@
 
 #include <exec/exec.h>
 
-#include <proto/exec.h>
-#include <proto/intuition.h>
-#include <proto/alib.h>
+#include <clib/exec_protos.h>
+#include <clib/intuition_protos.h>
+#include <clib/alib_protos.h>
 #include <string.h>
 
 #include "idcmp.h"

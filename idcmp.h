@@ -4,15 +4,24 @@
 #include <intuition/intuition.h>
 #include <exec/exec.h>
 
-#include <proto/intuition.h>
-#include <proto/exec.h>
+#include <clib/intuition_protos.h>
+#include <clib/exec_protos.h>
 
 typedef struct Gadget IDCMPGadget;
 typedef struct Window IDCMPWindow;
+typedef struct Screen IDCMPScreen;
 typedef struct IntuiMessage IDCMPMessage;
 typedef struct List IDCMPList;
 
-#define ALL_IDCMP_EVENTS \
+#define WFLGS_SIMPLE (\
+   WFLG_SMART_REFRESH | WFLG_DRAGBAR | WFLG_CLOSEGADGET | \
+	 WFLG_DEPTHGADGET | WFLG_ACTIVATE)
+
+#define WFLGS_NORMAL (\
+   WFLGS_SIMPLE | WFLG_GIMMEZEROZERO | WFLG_REPORTMOUSE | \
+	 WFLG_SIZEGADGET)
+
+#define ALL_IDCMP_EVENTS (\
    IDCMP_ACTIVEWINDOW | IDCMP_CHANGEWINDOW | IDCMP_CLOSEWINDOW | \
    IDCMP_DELTAMOVE | IDCMP_DISKINSERTED | IDCMP_DISKREMOVED | \
    IDCMP_GADGETDOWN | IDCMP_GADGETHELP | IDCMP_GADGETUP | IDCMP_IDCMPUPDATE | \
@@ -20,7 +29,7 @@ typedef struct List IDCMPList;
    IDCMP_MENUHELP | IDCMP_MENUPICK | IDCMP_MENUVERIFY | IDCMP_MOUSEBUTTONS | \
    IDCMP_MOUSEMOVE | IDCMP_NEWPREFS | IDCMP_NEWSIZE | IDCMP_RAWKEY | \
    IDCMP_REFRESHWINDOW | IDCMP_REQCLEAR | IDCMP_REQSET | IDCMP_REQVERIFY | \
-   IDCMP_SIZEVERIFY | IDCMP_VANILLAKEY | IDCMP_WBENCHMESSAGE
+   IDCMP_SIZEVERIFY | IDCMP_VANILLAKEY | IDCMP_WBENCHMESSAGE)
 
 typedef enum IDCMPMouseButton {
    LEFT_MOUSE_UP = SELECTUP,
