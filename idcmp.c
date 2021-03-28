@@ -25,6 +25,10 @@ __idcmp_events_close_window__(
    struct Window *window, 
    struct IntuiMessage *message
 ) {
+   if (window) {
+      CloseWindow(window);
+   }
+
    return  STATE_FINISHED;
 }
 
