@@ -2,9 +2,19 @@
 .bra {
 .ket }
 
-If "{DIR}" eq ""
-  Cd "{DIR}"
-EndIf
+If "{DIR}" EQ ""
+  Echo "Specify a root directory containing IDCMP files"
+Else
+  If Exists "{DIR}"
+    Set CWD `cd`
+    Cd "{DIR}"
+  EndIf
 
-Assign Lib: Lib Add
-Assign Include: Include Add
+  Assign Lib: Lib Add
+  Assign Include: Include Add
+
+  If Exists "{DIR}"
+    Cd "$CWD"
+    UnSet CWD
+  EndIf
+EndIf
