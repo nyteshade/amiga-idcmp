@@ -7,7 +7,7 @@
 #include <clib/alib_protos.h>
 #include <string.h>
 
-#include "idcmp.h"
+#include <intuition/idcmp.h>
 
 /**
  * Predefined basic function that ensures the application message loop exits

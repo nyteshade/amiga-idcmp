@@ -5,7 +5,7 @@
 #include <clib/exec_protos.h>
 #include <clib/alib_stdio_protos.h>
 
-#include "idcmp.h"
+#include <intuition/idcmp.h>
 
 struct IntuitionBase* IntuitionBase;
 

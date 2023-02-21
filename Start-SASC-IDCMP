@@ -1,0 +1,10 @@
+.key DIR/A
+.bra {
+.ket }
+
+If "{DIR}" eq ""
+  Cd "{DIR}"
+EndIf
+
+Assign Lib: Lib Add
+Assign Include: Include Add
